@@ -21,7 +21,6 @@ def carregar_tarefas():
 def listar_tarefas(tarefas):
     if not tarefas:
         print("Nenhuma tarefa cadastrada!")
-        return
 
     for indice, tarefa in enumerate(tarefas, start=1):
         if tarefa["concluida"]:
@@ -33,7 +32,11 @@ def listar_tarefas(tarefas):
 
 
 def adicionar_tarefa(tarefas):
-    nova_tarefa = input("Digite uma nova tarefa: ")
+    nova_tarefa = input("Digite uma nova tarefa: ").strip()
+
+    if not nova_tarefa:
+        print("Erro! A descrição não pode ser vazia.")
+        return
 
     tarefas.append({
         "descricao": nova_tarefa,
@@ -93,6 +96,36 @@ def excluir_tarefa(tarefas):
     else:
         print("Tarefa inexistente!")
 
+def editar_tarefa(tarefas):
+    if not tarefas:
+        print("Nenhuma tarefa cadastrada!")
+        return
+
+    listar_tarefas(tarefas)
+
+    try:
+        numero = int(input("Digite o numero da tarefa a editar?"))
+    except ValueError:
+        print("Digite um número válido!")
+        return
+
+    if 1 <= numero <= len(tarefas):
+
+        nova_tarefa = input("Digite o nome da nova tarefa: ").strip()
+
+        if not nova_tarefa:
+            print("Erro! Digite uma nova tarefa")
+            return
+
+        tarefas[numero - 1]["descricao"] = nova_tarefa
+
+        salvar_tarefas(tarefas)
+        print("Tarefa edida com sucesso!")
+
+
+    else:
+        print("Tarefa não encontrada!")
+
 
 tarefas = carregar_tarefas()
 opcao = 0
@@ -104,6 +137,7 @@ while opcao != 5:
     print("3 - Concluir tarefa")
     print("4 - Excluir tarefa")
     print("5 - Sair")
+    print("6 - Editar tarefa")
 
     try:
         opcao = int(input("Digite sua opção: "))
@@ -126,6 +160,9 @@ while opcao != 5:
 
     elif opcao == 5:
         print("Encerrando programa!")
+
+    elif opcao == 6:
+        editar_tarefa(tarefas)
 
     else:
         print("Opção inválida!")
